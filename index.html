@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraProductivity - Multi-Tool Dashboard</title>
+
+  <!-- Google Fonts & Remix Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- CSS -->
+   <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
+    <i class="ri-menu-line"></i>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"><i class="ri-flashlight-fill"></i></div>
+        <div class="brand-text">Aura Productivity</div>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active"><button onclick="switchPage(0)"><i class="ri-dashboard-line"></i> Dashboard</button></li>
+        <li class="nav-item"><button onclick="switchPage(1)"><i class="ri-checkbox-line"></i> Tasks</button></li>
+        <li class="nav-item"><button onclick="switchPage(2)"><i class="ri-timer-line"></i> Pomodoro</button></li>
+        <li class="nav-item"><button onclick="switchPage(3)"><i class="ri-book-open-line"></i> Notes</button></li>
+        <li class="nav-item"><button onclick="switchPage(4)"><i class="ri-calculator-line"></i> Calculator</button></li>
+        <li class="nav-item"><button onclick="switchPage(5)"><i class="ri-calendar-event-line"></i> Calendar</button></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <!-- PAGE 1: DASHBOARD -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1><i class="ri-dashboard-3-line" style="color:var(--accent-cyan)"></i> Overview</h1>
+        <p>Welcome back! Here is your productivity summary for today.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(0, 234, 255, 0.15); color: var(--accent-cyan);">
+            <i class="ri-task-line"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Total Tasks</h4>
+            <h2 id="dash-total-tasks">0</h2>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">
+            <i class="ri-checkbox-circle-line"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Completed</h4>
+            <h2 id="dash-completed-tasks">0</h2>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">
+            <i class="ri-time-line"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Focus Sessions</h4>
+            <h2 id="dash-timer-sessions">0</h2>
+          </div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: var(--accent-pink);">
+            <i class="ri-sticky-note-line"></i>
+          </div>
+          <div class="stat-info">
+            <h4>Notes Taken</h4>
+            <h2 id="dash-notes-count">0</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div>
+          <div class="card quote-card">
+            <p>"Focus is a muscle. The more you practice eliminating distractions, the easier it gets."</p>
+            <span>— Daily Focus Mantra</span>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">Quick Actions</h3>
+            <div class="quick-actions">
+              <button class="action-btn" onclick="switchPage(1)">
+                <i class="ri-add-circle-line"></i>
+                Add Task
+              </button>
+              <button class="action-btn" onclick="switchPage(2)">
+                <i class="ri-play-circle-line"></i>
+                Start Focus
+              </button>
+              <button class="action-btn" onclick="switchPage(3)">
+                <i class="ri-file-add-line"></i>
+                New Note
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom: 16px; font-size: 16px;">Recent Active Tasks</h3>
+          <ul class="task-list" id="dash-recent-tasks">
+            
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: TO-DO LIST -->
+    <section class="page" id="page-todos">
+      <div class="page-header">
+        <h1><i class="ri-checkbox-line" style="color:var(--accent-purple)"></i> Task Manager</h1>
+        <p>Organize, filter, and complete your day-to-day goals.</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="todo-controls">
+          <div class="todo-input-group">
+            <input type="text" class="form-control" id="todoInput" placeholder="What needs to be done?">
+            <select class="form-control" id="todoCategory" style="width: auto;">
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+            <button class="btn btn-primary" id="addTodoBtn"><i class="ri-add-line"></i> Add</button>
+          </div>
+          <div class="filter-tabs">
+            <button class="filter-btn active" onclick="setTodoFilter('all', this)">All</button>
+            <button class="filter-btn" onclick="setTodoFilter('active', this)">Active</button>
+            <button class="filter-btn" onclick="setTodoFilter('completed', this)">Completed</button>
+          </div>
+        </div>
+
+        <ul class="task-list" id="todoList">
+        </ul>
+      </div>
+    </section>
+
+    <!-- PAGE 3: TIMER -->
+    <section class="page" id="page-timer">
+      <div class="page-header">
+        <h1><i class="ri-timer-line" style="color:var(--accent-cyan)"></i> Pomodoro Focus</h1>
+        <p>Boost your focus with timed work sessions and structured breaks.</p>
+      </div>
+
+      <div class="card timer-container">
+        <div class="timer-modes">
+          <button class="mode-btn active" onclick="setTimerMode(25, 'Focus', this)">Focus (25m)</button>
+          <button class="mode-btn" onclick="setTimerMode(5, 'Short Break', this)">Short Break (5m)</button>
+          <button class="mode-btn" onclick="setTimerMode(15, 'Long Break', this)">Long Break (15m)</button>
+        </div>
+
+        <div class="timer-ring-container">
+          <svg class="timer-svg" viewBox="0 0 240 240">
+            <defs>
+              <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--accent-cyan)" />
+                <stop offset="100%" stop-color="var(--accent-purple)" />
+              </linearGradient>
+            </defs>
+            <circle class="timer-circle-bg" cx="120" cy="120" r="110" />
+            <circle class="timer-circle-progress" id="timerProgress" cx="120" cy="120" r="110" />
+          </svg>
+          <div class="timer-display">
+            <div class="timer-time" id="timerDisplay">25:00</div>
+            <div class="timer-status" id="timerStatus">Focus</div>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="timerStartBtn" onclick="toggleTimer()"><i class="ri-play-fill"></i> Start</button>
+          <button class="btn" style="background: rgba(255,255,255,0.08); color: #fff;" onclick="resetTimer()"><i class="ri-refresh-line"></i> Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: NOTES -->
+    <section class="page" id="page-notes">
+      <div class="page-header">
+        <h1><i class="ri-book-open-line" style="color:var(--accent-pink)"></i> Notes & Thoughts</h1>
+        <p>Capture ideas, meeting notes, and structured documentation.</p>
+      </div>
+
+      <div class="notes-layout">
+        <div class="notes-sidebar">
+          <button class="btn btn-primary" onclick="createNewNote()"><i class="ri-add-line"></i> New Note</button>
+          <input type="text" class="form-control" id="noteSearch" placeholder="Search notes..." oninput="renderNotes()">
+          <div class="notes-list" id="notesList">
+          </div>
+        </div>
+        <div class="card note-editor">
+          <input type="text" class="form-control note-title-input" id="noteTitle" placeholder="Note Title..." oninput="saveCurrentNote()">
+          <textarea class="form-control note-textarea" id="noteBody" placeholder="Start typing your note here..." oninput="saveCurrentNote()"></textarea>
+          <div style="display: flex; justify-content: flex-end;">
+            <button class="btn-icon" onclick="deleteCurrentNote()" title="Delete Note"><i class="ri-delete-bin-line"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: CALCULATOR -->
+    <section class="page" id="page-calc">
+      <div class="page-header">
+        <h1><i class="ri-calculator-line" style="color:var(--accent-green)"></i> Calculator</h1>
+        <p>Sleek utility for quick calculations and math logic.</p>
+      </div>
+
+      <div class="card calc-container">
+        <div class="calc-screen">
+          <div class="calc-history" id="calcHistory"></div>
+          <div class="calc-output" id="calcOutput">0</div>
+        </div>
+        <div class="calc-grid">
+          <button class="calc-btn clear" onclick="calcClear()">C</button>
+          <button class="calc-btn operator" onclick="calcInput('/')">÷</button>
+          <button class="calc-btn operator" onclick="calcInput('*')">×</button>
+          <button class="calc-btn operator" onclick="calcBackspace()"><i class="ri-backspace-line"></i></button>
+
+          <button class="calc-btn" onclick="calcInput('7')">7</button>
+          <button class="calc-btn" onclick="calcInput('8')">8</button>
+          <button class="calc-btn" onclick="calcInput('9')">9</button>
+          <button class="calc-btn operator" onclick="calcInput('-')">−</button>
+
+          <button class="calc-btn" onclick="calcInput('4')">4</button>
+          <button class="calc-btn" onclick="calcInput('5')">5</button>
+          <button class="calc-btn" onclick="calcInput('6')">6</button>
+          <button class="calc-btn operator" onclick="calcInput('+')">+</button>
+
+          <button class="calc-btn" onclick="calcInput('1')">1</button>
+          <button class="calc-btn" onclick="calcInput('2')">2</button>
+          <button class="calc-btn" onclick="calcInput('3')">3</button>
+          <button class="calc-btn operator" onclick="calcInput('%')">%</button>
+
+          <button class="calc-btn" onclick="calcInput('0')">0</button>
+          <button class="calc-btn" onclick="calcInput('.')">.</button>
+          <button class="calc-btn equal" onclick="calcEvaluate()">=</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: CALENDAR -->
+    <section class="page" id="page-calendar">
+      <div class="page-header">
+        <h1><i class="ri-calendar-event-line" style="color:var(--accent-amber)"></i> Interactive Calendar</h1>
+        <p>View dates and keep track of scheduled events.</p>
+      </div>
+
+      <div class="card">
+        <div class="calendar-header">
+          <h3 id="calMonthYear">Month Year</h3>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-icon" onclick="changeMonth(-1)"><i class="ri-arrow-left-s-line"></i></button>
+            <button class="btn-icon" onclick="changeMonth(1)"><i class="ri-arrow-right-s-line"></i></button>
+          </div>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="cal-day-label">Sun</div>
+          <div class="cal-day-label">Mon</div>
+          <div class="cal-day-label">Tue</div>
+          <div class="cal-day-label">Wed</div>
+          <div class="cal-day-label">Thu</div>
+          <div class="cal-day-label">Fri</div>
+          <div class="cal-day-label">Sat</div>
+        </div>
+        <div class="calendar-grid" id="calendarDays" style="margin-top: 8px;">
+          <!-- Days generated via JS -->
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
