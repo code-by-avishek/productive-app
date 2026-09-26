@@ -1,19 +1,19 @@
 const state = {
-      todos: JSON.parse(localStorage.getItem('aura_todos')) || [],
-      notes: JSON.parse(localStorage.getItem('aura_notes')) || [
-        { id: 1, title: 'Welcome Note', body: 'Welcome to Aura Productivity Dashboard! Manage tasks, set timers, and take notes smoothly.', date: new Date().toISOString() }
+      todos: JSON.parse(localStorage.getItem('my_todos')) || [],
+      notes: JSON.parse(localStorage.getItem('my_notes')) || [
+        { id: 1, title: 'Welcome Note', body: 'Welcome to My Productivity Dashboard! Manage tasks, set timers, and take notes smoothly.', date: new Date().toISOString() }
       ],
       activeNoteId: null,
-      timerSessions: parseInt(localStorage.getItem('aura_timer_sessions')) || 0,
+      timerSessions: parseInt(localStorage.getItem('timer_sessions')) || 0,
       currentFilter: 'all',
       calcExpression: '',
       currentDate: new Date()
     };
 
     function saveState() {
-      localStorage.setItem('aura_todos', JSON.stringify(state.todos));
-      localStorage.setItem('aura_notes', JSON.stringify(state.notes));
-      localStorage.setItem('aura_timer_sessions', state.timerSessions.toString());
+      localStorage.setItem('my_todos', JSON.stringify(state.todos));
+      localStorage.setItem('my_notes', JSON.stringify(state.notes));
+      localStorage.setItem('timer_sessions', state.timerSessions.toString());
       updateDashboardStats();
     }
 /* =========================================================
@@ -158,16 +158,8 @@ function switchPage(index) {
 function handleNavigationResize() {
 
     if (window.innerWidth <= 768) {
-
-        /*
-         * MOBILE / iPHONE
-         *
-         * Bottom navigation is always visible.
-         * Remove desktop sidebar state.
-         */
-
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
 
     }
 
